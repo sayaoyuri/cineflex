@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import axios from "axios"
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
 import HomePage from "./pages/HomePage/HomePage"
 import SeatsPage from "./pages/SeatsPage/SeatsPage"
@@ -11,12 +12,17 @@ export default function App() {
     
     return (
         <>
-           <NavContainer>CINEFLEX</NavContainer>
-
-            <HomePage />
-            {/* <SessionsPage /> */}
-            {/* <SeatsPage /> */}
-            {/* <SuccessPage /> */}
+            <BrowserRouter>
+                <Link to="/">
+                    <NavContainer>CINEFLEX</NavContainer>
+                </Link>
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/sessions/:id" element={<SessionsPage />} />
+                    <Route path="/seats/:id" element={<SeatsPage />} />
+                    <Route path="/success/" element={<SuccessPage />} />
+                </Routes>
+            </BrowserRouter>
         </>
     )
 }

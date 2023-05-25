@@ -1,13 +1,13 @@
 import styled from "styled-components"
 import axios from "axios";
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useEffect, useState } from "react";
 
 export default function SessionsPage(props) {
     const [getStatus, setGetStatus] = useState(undefined);
     const [movie, setMovie] = useState( {} );
     let { id } = useParams();
-    console.log(movie);
+    // console.log(movie);
 
     useEffect(() => {
         axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/movies/${id}/showtimes`)
@@ -27,11 +27,13 @@ export default function SessionsPage(props) {
             Selecione o horário
             <div>
                 {movie.days.map(day => (
-                    <SessionContainer>
+                    <SessionContainer key={day.id}>
                         <p>{`${day.weekday} - ${day.date}`}</p>
                         <ButtonsContainer>
                             {day.showtimes.map(time => (
-                                <button key={time.id}>{time.name}</button> )
+                                <Link to={`../seats/${time.id}`} key={time.id}>
+                                    <button >{time.name}</button>
+                                </Link> )
                             )}
                         </ButtonsContainer>
                     </SessionContainer> )

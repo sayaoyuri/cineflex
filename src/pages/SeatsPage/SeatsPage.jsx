@@ -1,17 +1,31 @@
 import styled from "styled-components"
+import axios from "axios";
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from "react";
 
 export default function SeatsPage() {
+    const [session, setSession] = useState(undefined)
+    let { id } = useParams();
+    // console.log(session);
+
+    useEffect(() => {
+        axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${id}/seats`)
+            .then(resp => setSession(resp.data));
+    }, [])
+
+    if(session === undefined) {
+        return <p>Carregando...</p>
+    }
 
     return (
         <PageContainer>
             Selecione o(s) assento(s)
 
             <SeatsContainer>
-                <SeatItem>01</SeatItem>
-                <SeatItem>02</SeatItem>
-                <SeatItem>03</SeatItem>
-                <SeatItem>04</SeatItem>
-                <SeatItem>05</SeatItem>
+                {session.seats.map(seat => (
+                    <SeatItem key={seat.id} isAvailable={seat.isAvailable}>{seat.name}</SeatItem>
+                )
+                )}
             </SeatsContainer>
 
             <CaptionContainer>
@@ -20,11 +34,11 @@ export default function SeatsPage() {
                     Selecionado
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle isAvailable={true}/>
                     Disponível
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle isAvailable={false}/>
                     Indisponível
                 </CaptionItem>
             </CaptionContainer>
@@ -41,11 +55,11 @@ export default function SeatsPage() {
 
             <FooterContainer>
                 <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    <img src={session.movie.posterURL} alt={session.movie.title} />
                 </div>
                 <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                    <p>Sexta - 14h00</p>
+                    <p>{session.movie.title}</p>
+                    <p>{`${session.day.weekday} - ${session.name}`}</p>
                 </div>
             </FooterContainer>
 
@@ -96,8 +110,8 @@ const CaptionContainer = styled.div`
     margin: 20px;
 `
 const CaptionCircle = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    border: 1px solid ${props => !props.isAvailable ? '#F7C52B' : '#C3CFD9'};      // Essa cor deve mudar
+    background-color: ${props => !props.isAvailable ? '#FBE192' : '#7B8B99'};      // Essa cor deve mudar
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -113,8 +127,9 @@ const CaptionItem = styled.div`
     font-size: 12px;
 `
 const SeatItem = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    /* border: 1px solid blue;         // Essa cor deve mudar */
+    border: 1px solid ${props => props.isAvailable === false ? '#F7C52B' : '#7B8B99' };         // Essa cor deve mudar
+    background-color: ${props => props.isAvailable === false ? '#FBE192' : '#C3CFD9' };    // Essa cor deve mudar
     height: 25px;
     width: 25px;
     border-radius: 25px;

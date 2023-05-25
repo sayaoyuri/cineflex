@@ -5,13 +5,22 @@ import { useEffect, useState } from "react";
 
 export default function SeatsPage() {
     const [session, setSession] = useState(undefined)
+    const [selectedSeats, setSelectedSeats] = useState( [] );
     let { id } = useParams();
-    // console.log(session);
+    console.log(selectedSeats);
 
     useEffect(() => {
         axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${id}/seats`)
             .then(resp => setSession(resp.data));
     }, [])
+
+    function selectSeat(seat) {
+        if(!selectedSeats.includes(seat.id) && seat.isAvailable) {
+            const list = [...selectedSeats, seat.id];
+    
+            setSelectedSeats(list);
+        } // unselectSeat
+    }
 
     if(session === undefined) {
         return <p>Carregando...</p>
@@ -23,14 +32,21 @@ export default function SeatsPage() {
 
             <SeatsContainer>
                 {session.seats.map(seat => (
-                    <SeatItem key={seat.id} isAvailable={seat.isAvailable}>{seat.name}</SeatItem>
+                    <SeatItem 
+                        key={seat.id}
+                        onClick={() => selectSeat(seat)} 
+                        isAvailable={seat.isAvailable}
+                        isSelected={selectedSeats.includes(seat.id)} 
+                    >
+                        {seat.name}
+                    </SeatItem>
                 )
                 )}
             </SeatsContainer>
 
             <CaptionContainer>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle isAvailable={'selected'}/>
                     Selecionado
                 </CaptionItem>
                 <CaptionItem>
@@ -110,8 +126,8 @@ const CaptionContainer = styled.div`
     margin: 20px;
 `
 const CaptionCircle = styled.div`
-    border: 1px solid ${props => !props.isAvailable ? '#F7C52B' : '#C3CFD9'};      // Essa cor deve mudar
-    background-color: ${props => !props.isAvailable ? '#FBE192' : '#7B8B99'};      // Essa cor deve mudar
+    border: 1px solid ${props => props.isAvailable === 'selected' ? '#0E7D71' : props.isAvailable ? '#7B8B99' : '#F7C52B'};
+    background-color: ${props => props.isAvailable === 'selected' ? '#1AAE9E' : props.isAvailable ? '#C3CFD9' : '#FBE192'};
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -127,9 +143,8 @@ const CaptionItem = styled.div`
     font-size: 12px;
 `
 const SeatItem = styled.div`
-    /* border: 1px solid blue;         // Essa cor deve mudar */
-    border: 1px solid ${props => props.isAvailable === false ? '#F7C52B' : '#7B8B99' };         // Essa cor deve mudar
-    background-color: ${props => props.isAvailable === false ? '#FBE192' : '#C3CFD9' };    // Essa cor deve mudar
+    border: 1px solid ${props => !props.isAvailable ? '#F7C52B' : props.isSelected ? '#0E7D71' : '#7B8B99' };
+    background-color: ${props => !props.isAvailable ? '#FBE192' : props.isSelected ? '#1AAE9E' : '#C3CFD9' };
     height: 25px;
     width: 25px;
     border-radius: 25px;

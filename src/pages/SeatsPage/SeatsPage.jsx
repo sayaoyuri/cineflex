@@ -1,11 +1,14 @@
 import styled from "styled-components"
 import axios from "axios";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
 
 export default function SeatsPage() {
     const [session, setSession] = useState(undefined)
     const [selectedSeats, setSelectedSeats] = useState( [] );
+    const [name, setName] = useState('');
+    const [cpf, setCpf] = useState('');
+    const navigate = useNavigate();
     let { id } = useParams();
     console.log(selectedSeats);
 
@@ -13,6 +16,24 @@ export default function SeatsPage() {
         axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${id}/seats`)
             .then(resp => setSession(resp.data));
     }, [])
+
+    function reserveSeats(ev) {
+        ev.preventDefault();
+        if(selectedSeats.length !== 0) {
+            const request ={ ids: selectedSeats, name, cpf };
+
+            axios.post('https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many', request)
+                .then(resp => {
+                    console.log(resp);
+                    navigate('../success');
+                })
+                .catch(err => console.log(err));
+        } else {
+            // alert('Selecione ao menos um assento');
+            console.log('Selecione ao menos um assento');
+        }
+        console.log(name, cpf, selectedSeats);
+    }
 
     function selectSeat(seat) {
         if(!selectedSeats.includes(seat.id) && seat.isAvailable) {
@@ -59,14 +80,25 @@ export default function SeatsPage() {
                 </CaptionItem>
             </CaptionContainer>
 
-            <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+            <FormContainer onSubmit={reserveSeats}>
+                <label htmlFor='name'>Nome do Comprador:</label>
+                <input type="text"
+                    onChange={(e) => setName(e.target.value)}
+                    value={name}
+                    id='name'
+                    placeholder="Digite seu nome..."
+                    minLength={3}
+                />
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
-
-                <button>Reservar Assento(s)</button>
+                <label htmlFor='cpf'>CPF do Comprador:</label>
+                <input onChange={(e) => setCpf(e.target.value)} 
+                    value={cpf} 
+                    id='cpf'
+                    placeholder="Digite seu CPF..." 
+                    required minLength={11} 
+                    maxLength={11}
+                />
+                <button type="submit">Reservar Assento(s)</button>
             </FormContainer>
 
             <FooterContainer>
@@ -104,7 +136,7 @@ const SeatsContainer = styled.div`
     justify-content: center;
     margin-top: 20px;
 `
-const FormContainer = styled.div`
+const FormContainer = styled.form`
     width: calc(100vw - 40px); 
     display: flex;
     flex-direction: column;

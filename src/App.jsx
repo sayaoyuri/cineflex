@@ -1,14 +1,18 @@
 import styled from "styled-components"
 import axios from "axios"
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
 import HomePage from "./pages/HomePage/HomePage"
 import SeatsPage from "./pages/SeatsPage/SeatsPage"
 import SessionsPage from "./pages/SessionsPage/SessionsPage"
 import SuccessPage from "./pages/SuccessPage/SuccessPage"
+import React from "react"
 
 export default function App() {
     axios.defaults.headers.common['Authorization'] = 'M813n9erPvENXeuGPzKDL1Iu';
+
+    const [tickets, setTickets] = useState( {} );
     
     return (
         <>
@@ -19,8 +23,8 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/sessions/:id" element={<SessionsPage />} />
-                    <Route path="/seats/:id" element={<SeatsPage />} />
-                    <Route path="/success/" element={<SuccessPage />} />
+                    <Route path="/seats/:id" element={<SeatsPage tickets={tickets} setTickets={setTickets}/>} />
+                    <Route path="/success/" element={<SuccessPage tickets={tickets} setTickets={setTickets}/>} />
                 </Routes>
             </BrowserRouter>
         </>

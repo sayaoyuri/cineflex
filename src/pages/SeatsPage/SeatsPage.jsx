@@ -3,14 +3,14 @@ import axios from "axios";
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
 
-export default function SeatsPage() {
+export default function SeatsPage( {setTickets} ) {
     const [session, setSession] = useState(undefined)
     const [selectedSeats, setSelectedSeats] = useState( [] );
+    const [seatsNames, setSeatsNames] = useState( [] );
     const [name, setName] = useState('');
     const [cpf, setCpf] = useState('');
     const navigate = useNavigate();
     let { id } = useParams();
-    console.log(selectedSeats);
 
     useEffect(() => {
         axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${id}/seats`)
@@ -20,11 +20,19 @@ export default function SeatsPage() {
     function reserveSeats(ev) {
         ev.preventDefault();
         if(selectedSeats.length !== 0) {
-            const request ={ ids: selectedSeats, name, cpf };
+            const seatsId = selectedSeats.map(seat => seat.id);
+            const request ={ ids: seatsId, name, cpf };
 
             axios.post('https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many', request)
                 .then(resp => {
                     console.log(resp);
+                    setTickets({
+                        session,
+                        name, 
+                        cpf,
+                        seatsNames 
+                        }
+                    );
                     navigate('../success');
                 })
                 .catch(err => console.log(err));
@@ -32,14 +40,13 @@ export default function SeatsPage() {
             // alert('Selecione ao menos um assento');
             console.log('Selecione ao menos um assento');
         }
-        console.log(name, cpf, selectedSeats);
     }
 
     function selectSeat(seat) {
         if(!selectedSeats.includes(seat.id) && seat.isAvailable) {
-            const list = [...selectedSeats, seat.id];
+            setSelectedSeats( [...selectedSeats, seat.id] );
+            setSeatsNames( [... seatsNames, seat.name] );
     
-            setSelectedSeats(list);
         } // unselectSeat
     }
 

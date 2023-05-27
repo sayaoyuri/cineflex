@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router"
 import styled from "styled-components"
 
-export default function SuccessPage( {tickets} ) {
+export default function SuccessPage( {tickets, setTickets} ) {
+    const navigate = useNavigate();
 
     return (
         <PageContainer>
@@ -14,7 +16,7 @@ export default function SuccessPage( {tickets} ) {
 
             <TextContainer>
                 <strong><p>Ingressos</p></strong>
-                {tickets.seatsNames.map(seat => <p>{`Assento ${seat}`}</p> )}
+                {tickets.seatsNames.map(seat => <p key={seat}>{`Assento ${seat}`}</p> )}
             </TextContainer>
 
             <TextContainer>
@@ -23,7 +25,14 @@ export default function SuccessPage( {tickets} ) {
                 <p>{`CPF: ${tickets.cpf}`}</p>
             </TextContainer>
 
-            <button>Voltar para Home</button>
+            <button onClick={(e) => {
+                e.preventDefault();
+                setTickets( [] );
+                navigate('/');
+            }}
+            >
+                Voltar para Home
+            </button>
         </PageContainer>
     )
 }

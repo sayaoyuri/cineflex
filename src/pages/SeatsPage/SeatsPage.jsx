@@ -20,19 +20,13 @@ export default function SeatsPage( {setTickets} ) {
     function reserveSeats(ev) {
         ev.preventDefault();
         if(selectedSeats.length !== 0) {
-            const seatsId = selectedSeats.map(seat => seat.id);
-            const request ={ ids: seatsId, name, cpf };
+            const request ={ ids: selectedSeats, name, cpf };
+            console.log(request);
 
             axios.post('https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many', request)
                 .then(resp => {
                     console.log(resp);
-                    setTickets({
-                        session,
-                        name, 
-                        cpf,
-                        seatsNames 
-                        }
-                    );
+                    setTickets( {session, name, cpf, seatsNames});
                     navigate('../success');
                 })
                 .catch(err => console.log(err));

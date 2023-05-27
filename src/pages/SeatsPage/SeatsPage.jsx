@@ -59,6 +59,7 @@ export default function SeatsPage( {setTickets} ) {
                         onClick={() => selectSeat(seat)} 
                         isAvailable={seat.isAvailable}
                         isSelected={selectedSeats.includes(seat.id)} 
+                        data-test='seat'
                     >
                         {seat.name}
                     </SeatItem>
@@ -89,6 +90,7 @@ export default function SeatsPage( {setTickets} ) {
                     id='name'
                     placeholder="Digite seu nome..."
                     minLength={3}
+                    data-test='client-name'
                 />
 
                 <label htmlFor='cpf'>CPF do Comprador:</label>
@@ -98,11 +100,12 @@ export default function SeatsPage( {setTickets} ) {
                     placeholder="Digite seu CPF..." 
                     required minLength={11} 
                     maxLength={11}
+                    data-test='client-cpf'
                 />
-                <button type="submit">Reservar Assento(s)</button>
+                <button type="submit" data-test='book-seat-btn'>Reservar Assento(s)</button>
             </FormContainer>
 
-            <FooterContainer>
+            <FooterContainer data-test='footer'>
                 <div>
                     <img src={session.movie.posterURL} alt={session.movie.title} />
                 </div>

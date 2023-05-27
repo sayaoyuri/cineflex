@@ -8,28 +8,30 @@ export default function SuccessPage( {tickets, setTickets} ) {
         <PageContainer>
             <h1>Pedido feito <br /> com sucesso!</h1>
 
-            <TextContainer>
+            <TextContainer data-test='movie-info'>
                 <strong><p>Filme e sessão</p></strong>
                 <p>{tickets.session.movie.title}</p>
                 <p>{`${tickets.session.day.date} ${tickets.session.name}`}</p>
             </TextContainer>
 
-            <TextContainer>
+            <TextContainer data-test='seats-info'>
                 <strong><p>Ingressos</p></strong>
                 {tickets.seatsNames.map(seat => <p key={seat}>{`Assento ${seat}`}</p> )}
             </TextContainer>
 
-            <TextContainer>
+            <TextContainer data-test='client-info'>
                 <strong><p>Comprador</p></strong>
                 <p>{`Nome: ${tickets.name}`}</p>
                 <p>{`CPF: ${tickets.cpf}`}</p>
             </TextContainer>
 
-            <button onClick={(e) => {
-                e.preventDefault();
-                setTickets( [] );
-                navigate('/');
-            }}
+            <button 
+                onClick={(e) => {
+                    e.preventDefault();
+                    setTickets( [] );
+                    navigate('/');
+                }}
+                data-test='go-home-btn'
             >
                 Voltar para Home
             </button>

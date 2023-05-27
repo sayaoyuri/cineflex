@@ -28,7 +28,6 @@ export default function SuccessPage( {tickets, setTickets} ) {
             <button 
                 onClick={(e) => {
                     e.preventDefault();
-                    setTickets( [] );
                     navigate('/');
                 }}
                 data-test='go-home-btn'

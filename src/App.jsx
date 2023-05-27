@@ -24,7 +24,7 @@ export default function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/sessoes/:id" element={<SessionsPage />} />
                     <Route path="/assentos/:id" element={<SeatsPage tickets={tickets} setTickets={setTickets}/>} />
-                    <Route path="/successo/" element={<SuccessPage tickets={tickets} setTickets={setTickets}/>} />
+                    <Route path="/sucesso/" element={<SuccessPage tickets={tickets} setTickets={setTickets}/>} />
                 </Routes>
             </BrowserRouter>
         </>

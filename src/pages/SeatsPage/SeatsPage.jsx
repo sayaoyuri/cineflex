@@ -14,34 +14,43 @@ export default function SeatsPage( {setTickets} ) {
 
     useEffect(() => {
         axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${id}/seats`)
-            .then(resp => setSession(resp.data));
+            .then(resp => setSession(resp.data))
+            .catch(err => console.log(err));
     }, [])
 
     function reserveSeats(ev) {
         ev.preventDefault();
         if(selectedSeats.length !== 0) {
             const request ={ ids: selectedSeats, name, cpf };
-            console.log(request);
+            // console.log(request);
 
             axios.post('https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many', request)
                 .then(resp => {
-                    console.log(resp);
+                    // console.log(resp);
                     setTickets( {session, name, cpf, seatsNames});
-                    navigate('../successo');
+                    navigate('../sucesso');
                 })
                 .catch(err => console.log(err));
         } else {
-            // alert('Selecione ao menos um assento');
-            console.log('Selecione ao menos um assento');
+            alert('Selecione ao menos um assento');
         }
     }
 
     function selectSeat(seat) {
-        if(!selectedSeats.includes(seat.id) && seat.isAvailable) {
-            setSelectedSeats( [...selectedSeats, seat.id] );
-            setSeatsNames( [... seatsNames, seat.name] );
-    
-        } // unselectSeat
+        if(seat.isAvailable) {
+            if(!selectedSeats.includes(seat.id) && !seatsNames.includes(seat.name)) { // save the selected seat if not already selected
+                setSelectedSeats( [...selectedSeats, seat.id] );
+                setSeatsNames( [... seatsNames, seat.name] );
+            } else { // remove the selected seat from list if already selected
+                selectedSeats.splice(selectedSeats.indexOf(seat.id), 1);
+                seatsNames.splice(seatsNames.indexOf(seat.name), 1);
+
+                setSelectedSeats( [...selectedSeats] );
+                setSeatsNames( [...seatsNames] );
+            }
+        } else {
+            alert('Assento indisponivel');
+        }
     }
 
     if(session === undefined) {

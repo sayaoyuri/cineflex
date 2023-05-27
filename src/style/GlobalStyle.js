@@ -14,6 +14,7 @@ const GlobalStyle = createGlobalStyle`
 		text-align: center;
 		color: #FFFFFF;
 		padding: 0 20px;
+		cursor: pointer;
 		&:disabled {
 			background-color: lightgray;
 		}

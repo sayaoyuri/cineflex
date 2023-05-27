@@ -11,7 +11,7 @@ export default function SuccessPage( {tickets, setTickets} ) {
             <TextContainer data-test='movie-info'>
                 <strong><p>Filme e sessão</p></strong>
                 <p>{tickets.session.movie.title}</p>
-                <p>{`${tickets.session.day.date} ${tickets.session.name}`}</p>
+                <p>{`${tickets.session.day.date} - ${tickets.session.name}`}</p>
             </TextContainer>
 
             <TextContainer data-test='seats-info'>

@@ -22,9 +22,9 @@ export default function App() {
                 </Link>
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/sessions/:id" element={<SessionsPage />} />
-                    <Route path="/seats/:id" element={<SeatsPage tickets={tickets} setTickets={setTickets}/>} />
-                    <Route path="/success/" element={<SuccessPage tickets={tickets} setTickets={setTickets}/>} />
+                    <Route path="/sessoes/:id" element={<SessionsPage />} />
+                    <Route path="/assentos/:id" element={<SeatsPage tickets={tickets} setTickets={setTickets}/>} />
+                    <Route path="/successo/" element={<SuccessPage tickets={tickets} setTickets={setTickets}/>} />
                 </Routes>
             </BrowserRouter>
         </>

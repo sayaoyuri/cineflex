@@ -27,7 +27,7 @@ export default function SeatsPage( {setTickets} ) {
                 .then(resp => {
                     console.log(resp);
                     setTickets( {session, name, cpf, seatsNames});
-                    navigate('../success');
+                    navigate('../successo');
                 })
                 .catch(err => console.log(err));
         } else {
